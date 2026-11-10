@@ -1,0 +1,17 @@
+[package]
+name = "dk-tensor"
+version = "0.1.0"
+edition = "2021"
+description = "Lightweight autograd-free tensor: CPU storage always, cudarc CUDA storage behind the `cuda` feature. The value type dk-autograd's Variable wraps."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+half = { workspace = true }
+rand = { workspace = true }
+cudarc = { workspace = true, optional = true }
+multiversion = { workspace = true }
+wide = { workspace = true }
+
+[features]
+default = []
+cuda = ["dep:cudarc"]

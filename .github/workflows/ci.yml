@@ -1,0 +1,30 @@
+name: Pandora open-core CPU checks
+on: [push, pull_request]
+jobs:
+  cpu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: pandora-open-core/pudding
+          path: pudding-sdk
+      - run: mv pudding-sdk ../pudding-open-core
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: python3 tools/check_public_scope.py
+      - run: python3 tools/check_consumer.py
+      - run: cargo fmt --package inferno-rs -- --check
+      - run: cargo check --workspace --lib --locked
+      - run: cargo test -p inferno-rs --locked
+      - run: cargo doc -p inferno-rs --no-deps --locked
+      - run: cargo run -p inferno-rs --locked --example custom_gp
+      - run: cargo run -p inferno-rs --locked --example custom_components
+      - run: cargo run -p inferno-rs --locked --example open_core
+      - run: cargo test --locked --features torch-kernels
+      - run: cargo run --locked --example gp_regression
+      - run: cargo run --locked --example candle_gaussian
+      - run: cargo test --workspace --locked
+      - run: cargo run --locked --example autograd
+      - run: cargo run --locked --example vae

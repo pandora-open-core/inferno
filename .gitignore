@@ -1,0 +1,11 @@
+/target/
+
+# Model weights are distributed separately from the open core.
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# Local Pandora journal and build/download caches.
+/notebook/.history/
+/notebook/.cache/

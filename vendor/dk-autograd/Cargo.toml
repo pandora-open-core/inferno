@@ -1,0 +1,16 @@
+[package]
+name = "dk-autograd"
+version = "0.1.0"
+edition = "2021"
+description = "From-first-principles autograd engine: a Rust port of torch/csrc/autograd's scheduling core (Node/Edge/GraphTask/ReadyQueue/Engine) over dk-tensor, with a curated hand-port of derivatives.yaml formulas."
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+dk-tensor = { path = "../dk-tensor" }
+dk-cuda-ffi = { path = "../dk-cuda-ffi" }
+rand = { version = "0.8" }
+
+[features]
+default = []
+cuda = ["dk-tensor/cuda", "dk-cuda-ffi/cuda"]
+

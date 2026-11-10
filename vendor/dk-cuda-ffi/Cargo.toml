@@ -1,0 +1,19 @@
+[package]
+name = "dk-cuda-ffi"
+version = "0.1.0"
+edition = "2021"
+description = "cxx bridge over ATen-derived cuBLAS/cuDNN kernels (transcribed from pytorch/aten, BSD-3 — see cpp/LICENSE.pytorch and PORTED_FROM.md)."
+license = "BSD-3-Clause"
+links = "dk-cuda-ffi"
+
+[dependencies]
+cxx = { workspace = true, optional = true }
+
+[build-dependencies]
+# Unconditional: build.rs must always compile; it early-returns unless the
+# `cuda` feature set CARGO_FEATURE_CUDA.
+cxx-build = { workspace = true }
+
+[features]
+default = []
+cuda = ["dep:cxx"]

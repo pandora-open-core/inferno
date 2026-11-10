@@ -1,0 +1,53 @@
+[package]
+name = "inferno-rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["Liam Dziga Douglas Giles"]
+description = "A Rust machine-learning library with tensors, autograd, VAEs and Gaussian processes"
+license = "MPL-2.0"
+publish = false
+
+[lib]
+name = "inferno"
+
+[workspace]
+members = ["vendor/dk-tensor", "vendor/dk-cuda-ffi", "pandorapurple", "vendor/dk-autograd"]
+exclude = ["vendor/candle"]
+resolver = "2"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+safetensors = "0.8"
+anyhow = "1"
+tracing = "0.1"
+candle-core = { path = "vendor/candle/candle-core", version = "=0.11.0" }
+candle-nn = { path = "vendor/candle/candle-nn", version = "=0.11.0" }
+ndarray = "0.15"
+rand_distr = "0.4"
+half = "2"
+rand = "0.8"
+multiversion = "0.8.0"
+wide = "1.6.1"
+cudarc = "=0.19.10"
+cxx = "1"
+cxx-build = "1"
+
+[dependencies]
+pudding = { path = "../pudding-open-core", version = "=0.2.0-rc.1" }
+dk-autograd = { path = "vendor/dk-autograd" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+pandorapurple = { path = "pandorapurple", default-features = false }
+candle-core = { workspace = true }
+candle-nn = { workspace = true }
+tracing = "0.1"
+
+dk-tensor = { path = "vendor/dk-tensor" }
+dk-cuda-ffi = { path = "vendor/dk-cuda-ffi", optional = true }
+
+[features]
+default = []
+# Optional native tensor kernel bridge.
+torch-kernels = ["dep:dk-cuda-ffi"]
+cuda = ["dk-autograd/cuda", "pandorapurple/cuda", "dk-cuda-ffi?/cuda", "dk-tensor/cuda", "candle-core/cuda", "candle-nn/cuda"]

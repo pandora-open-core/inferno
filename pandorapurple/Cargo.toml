@@ -1,0 +1,32 @@
+[package]
+name = "pandorapurple"
+version = "0.1.0"
+edition = "2021"
+license = "MPL-2.0"
+publish = false
+autobins = false
+autoexamples = false
+autotests = false
+description = "Curated VAE and legacy GP components for inferno"
+[dependencies]
+candle-core = { workspace = true }
+candle-nn = { workspace = true }
+tracing = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+ndarray = { workspace = true }
+rand = { workspace = true }
+rand_distr = { workspace = true }
+wide = { workspace = true }
+safetensors = { workspace = true }
+rand_chacha = "0.3"
+sobol_burley = "0.5"
+statrs = "0.17"
+rayon = "1.10"
+thiserror = "2.0.18"
+serde_yaml = "0.9"
+dk-tensor = { path = "../vendor/dk-tensor" }
+[features]
+default = []
+cuda = ["candle-core/cuda", "candle-core/cudnn", "candle-nn/cuda"]

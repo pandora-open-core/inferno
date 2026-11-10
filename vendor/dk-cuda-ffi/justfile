@@ -1,0 +1,26 @@
+# Package commands; also reachable from kernel via just modules::<path>::<recipe>.
+set positional-arguments
+
+
+# List this package and its child modules.
+default:
+    @just --justfile justfile --list
+
+# Check dk-cuda-ffi; extra Cargo arguments are forwarded verbatim.
+check *args:
+    cargo check --locked --manifest-path Cargo.toml -p dk-cuda-ffi "$@"
+
+# Build dk-cuda-ffi; extra Cargo arguments are forwarded verbatim.
+build *args:
+    cargo build --locked --manifest-path Cargo.toml -p dk-cuda-ffi "$@"
+
+# Test dk-cuda-ffi; extra Cargo arguments are forwarded verbatim.
+test *args:
+    cargo test --locked --manifest-path Cargo.toml -p dk-cuda-ffi "$@"
+
+# Clippy dk-cuda-ffi; extra Cargo arguments are forwarded verbatim.
+lint *args:
+    cargo clippy --locked --manifest-path Cargo.toml -p dk-cuda-ffi "$@"
+
+fmt:
+    cargo fmt --manifest-path Cargo.toml -- --check
