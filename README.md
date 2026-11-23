@@ -110,12 +110,6 @@ points; Matérn 1/2 is not differentiable there. White noise compares feature
 vectors for equality, including duplicate rows, and has no input derivative.
 For independent observation noise, use the likelihood instead.
 
-The legacy neural kernel and differentiable multitask GP remain available.
-The newer protected coupling kernel is excluded. Symbolic reductions use tiled
-Candle evaluation; generated CUDA/KeOps backends and the Cloud client have been
-removed. Default execution follows the same path, while workloads that enabled
-generated GPU reductions may run more slowly.
-
 ## Tensor types and alpha limits
 
 `inferno::prelude` and `inferno::candle` use Candle tensors. Root
