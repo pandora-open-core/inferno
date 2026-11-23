@@ -1,9 +1,9 @@
 //! Inferno — CPU adapter for first-order F32/F64 gradients between dk-autograd and Candle.
 
+use crate::autograd::node::{collect_next_edges, Result};
+use crate::autograd::{Node, NodeMeta, Variable};
+use crate::tensor::{DType, Device, Error, Tensor};
 use candle_core::{Tensor as CandleTensor, Var};
-use dk_autograd::node::{collect_next_edges, Result};
-use dk_autograd::{Node, NodeMeta, Variable};
-use dk_tensor::{DType, Device, Error, Tensor};
 use std::sync::{Arc, Mutex};
 
 fn error(e: impl std::fmt::Display) -> Error {
@@ -86,11 +86,11 @@ where
     let tensors: Vec<_> = variables.iter().map(|x| x.as_tensor().clone()).collect();
     let output = forward(&tensors).map_err(error)?;
     let tensor = from_candle(&output)?;
-    if !dk_autograd::grad_mode::is_enabled() || !inputs.iter().any(|x| x.requires_grad()) {
+    if !crate::autograd::grad_mode::is_enabled() || !inputs.iter().any(|x| x.requires_grad()) {
         return Ok(Variable::new(tensor));
     }
     let meta = NodeMeta::new("CandleVjp", collect_next_edges(inputs)).with_input_metadata(vec![
-        dk_autograd::input_metadata::InputMetadata::of(&tensor),
+        crate::autograd::input_metadata::InputMetadata::of(&tensor),
     ]);
     Ok(Variable::from_grad_fn(
         tensor,

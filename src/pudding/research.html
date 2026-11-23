@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pudding | See the bridge</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#0b1117;color:#e5eef5}body{overflow-wrap:anywhere;max-width:1160px;margin:auto;padding:36px 24px}h1{font-size:clamp(32px,6vw,64px);margin:12px 0}p{color:#a8bdcc;line-height:1.6}.eyebrow{color:#69ddbe;letter-spacing:.18em;font-size:12px}.metrics{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0}.metric{background:#14212c;border:1px solid #2c4051;border-radius:10px;padding:16px;flex:1;min-width:140px}.metric strong{display:block;color:#69ddbe;font-size:24px}svg{width:100%;height:auto}label{display:inline-block;margin:12px 20px 12px 0}select,input,button{accent-color:#69ddbe;background:#14212c;color:#e5eef5;padding:8px;border:1px solid #486173;border-radius:5px}.table-scroll{overflow-x:auto}code{overflow-wrap:anywhere}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}td,th{border:1px solid #304656;padding:10px;text-align:right}a{color:#69ddbe}code{color:#e9b46d}.note{border-left:3px solid #e9b46d;padding:4px 18px}footer{margin:36px 0;color:#a8bdcc}button{cursor:pointer}
+</style>
+<div class="eyebrow">PANDORA RESEARCH / PUDDING</div><h1>See the bridge.<br>Inspect the evidence.</h1>
+<p>An executable experiment in finite-support Schrödinger transport. Edge widths show the mass that the numerical solver assigns between atoms. Requested endpoints are compared with the mass actually returned.</p>
+<div class="metrics" id="metrics"></div>
+<label>Inspect source <select id="source"><option value="all">All atoms</option></select></label>
+<label>Hide edges below <input id="threshold" type="range" min="0" max="0.1" step="0.001" value="0"><output id="cutoff">0.000</output></label>
+<button id="download">Download run JSON</button>
+<div id="graph">__STUDY_SVG__</div>
+<p id="selection" aria-live="polite">Hover an edge to inspect its source, target and mass. Filtering changes visibility only.</p>
+<h2>Requested → observed</h2><div class="table-scroll"><table><thead><tr><th>Atom</th><th>Source requested</th><th>Target requested</th><th>Target observed</th><th>Absolute error</th></tr></thead><tbody id="marginals"></tbody></table></div>
+<h2>What this establishes</h2><p class="note" id="contract"></p>
+<p>The Lean library proves conditional finite-support statements: under explicit positivity, balance and symmetry assumptions, the constructed kernel has the stated stationarity or reversibility properties. Floating-point scaling is not a Lean proof of those premises. General continuous bridge existence, scaling-factor existence, KL optimality and solver correctness are outside the formal claim.</p>
+<footer>Portable research artifact · schema pudding.study.v1 · no external services required.<br>Reproduce with <code>cargo run --locked --bin pudding -- visualise --mode transport --output artifacts/transport</code>; use <code>--mode equilibrium</code> to test equal endpoints. See the SDK documentation for the mathematical assumptions and formal scope.</footer>
+<script type="application/json" id="study">__STUDY_JSON__</script>
+<script>
+const d=JSON.parse(document.getElementById('study').textContent);
+const metrics=[['Mode',d.mode],['Marginal error',d.marginal_residual.toExponential(2)],['Before scaling',d.baseline_residual.toExponential(2)],['Iterations',d.iterations]];
+for(const [name,value] of metrics){const box=document.createElement('div');box.className='metric';const title=document.createElement('span');title.textContent=name;const number=document.createElement('strong');number.textContent=value;box.append(title,number);document.getElementById('metrics').append(box)}
+const source=document.getElementById('source');d.source.forEach((_,i)=>{const o=document.createElement('option');o.value=i;o.textContent='Atom '+i;source.append(o)});
+const edges=[...document.querySelectorAll('.edge')];
+function filter(){const cutoff=Number(document.getElementById('threshold').value);document.getElementById('cutoff').value=cutoff.toFixed(3);edges.forEach(e=>e.style.display=(Number(e.dataset.mass)>=cutoff&&(source.value==='all'||e.dataset.source===source.value))?'':'none')}
+source.onchange=filter;document.getElementById('threshold').oninput=filter;
+edges.forEach(e=>e.addEventListener('pointerenter',()=>{document.getElementById('selection').textContent=e.querySelector('title').textContent}));
+d.source.forEach((s,i)=>{const tr=document.createElement('tr');[i,s.toFixed(6),d.target[i].toFixed(6),d.observed_target[i].toFixed(6),Math.abs(d.target[i]-d.observed_target[i]).toExponential(2)].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td)});document.getElementById('marginals').append(tr)});
+document.getElementById('contract').textContent=d.mode==='equilibrium'?`Equal endpoint experiment. Coupling symmetry residual: ${d.symmetry_residual.toExponential(2)}. This numerically checks the balanced, reversible stationary construction; it does not certify the floating-point run.`:'Unequal endpoint experiment. This coupling transports source mass to a different target. It is not a stationary equilibrium claim or a visualisation of a continuous-time path.';
+document.getElementById('download').onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='pudding-study.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+</script></html>

@@ -2,7 +2,7 @@
 
 use crate::candle::{DType, Device, Result, Tensor};
 use crate::operators::LinearOperator;
-use pudding::{Check, Engine, Report, TensorSnapshot, Tolerance};
+use crate::pudding::{Check, Engine, Report, TensorSnapshot, Tolerance};
 
 /// Take an owned host observation of the current tensor values.
 /// This takes `crate::candle::Tensor`, not the distinct root `crate::Tensor`.

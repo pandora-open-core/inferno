@@ -577,7 +577,7 @@ impl Default for BlockCfg {
     /// holds EVERY node's tile live at once, not just the root's, so the
     /// working set here is a formula's worth of tiles rather than one. The
     /// register-level blocking that targets L1 lives inside the kernels
-    /// (`dk_tensor::pairwise`), one level down, where the working set really
+    /// (`crate::tensor::pairwise`), one level down, where the working set really
     /// is a single tile.
     ///
     /// At the sizes this crate actually runs — `K_ATOMS = 30`, `D = 32`, a
@@ -585,7 +585,7 @@ impl Default for BlockCfg {
     /// module doc above asks for and the reason the change is safe.
     fn default() -> Self {
         Self {
-            budget_bytes: dk_tensor::cache_model::CacheBudget::global().usable_l2(),
+            budget_bytes: crate::tensor::cache_model::CacheBudget::global().usable_l2(),
             bi: None,
             bj: None,
             force_dense: false,

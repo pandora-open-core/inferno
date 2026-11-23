@@ -114,9 +114,9 @@ fn convolution_views_match_contiguous_forward_and_backward() -> inferno::candle:
         let w = weights.transpose(0, 1)?;
         let conv = |x: &Tensor, w: &Tensor| {
             if two_d {
-                x.conv2d(w, 1, 1, 1, 1)
+                inferno::convolution::conv2d_diff(x, w, 1, 1, 1, 1)
             } else {
-                x.conv1d(w, 1, 1, 1, 1)
+                inferno::convolution::conv1d_diff(x, w, 1, 1, 1, 1)
             }
         };
         let viewed = conv(&x, &w)?;

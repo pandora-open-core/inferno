@@ -96,9 +96,9 @@ dependencies = [
 
 [[package]]
 name = "bumpalo"
-version = "3.20.3"
+version = "3.20.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72f5acc6cb2ba439de613abc23857ec3d78374d8ed5ac84e9d11336e87da8649"
+checksum = "87a0cf66fd1eb2fb7b822cb78370d82303750809bc6ba855f3f58e517d3238db"
 
 [[package]]
 name = "bytemuck"
@@ -128,7 +128,9 @@ checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
 name = "candle-core"
-version = "0.11.0"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d11c8be87cfbaef9ebb62fb3f850d1fc8e00cc1d11d393fdbe55a4d5c2cdb325"
 dependencies = [
  "byteorder",
  "candle-kernels",
@@ -155,14 +157,18 @@ dependencies = [
 
 [[package]]
 name = "candle-kernels"
-version = "0.11.0"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8dc057aec95c3b1a0e595227cd039c1436da596f79ccc9e025ba17d070315851"
 dependencies = [
  "cudaforge",
 ]
 
 [[package]]
 name = "candle-nn"
-version = "0.11.0"
+version = "0.11.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "437fabe77547c2447c7bdf3cc946e19db29a2832440176b419f77c80b0a9a05e"
 dependencies = [
  "candle-core",
  "half",
@@ -255,6 +261,15 @@ dependencies = [
  "ryu",
  "serde",
  "static_assertions",
+]
+
+[[package]]
+name = "constant_time_eq"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9eb6feb175df65d0a3ccd3e73484e940d0ac664e8034f0519fd49a93db3071d9"
+dependencies = [
+ "rustversion",
 ]
 
 [[package]]
@@ -497,34 +512,6 @@ checksum = "9ed9a281f7bc9b7576e61468ba615a66a5c8cfdff42420a70aa82701a3b1e292"
 dependencies = [
  "block-buffer",
  "crypto-common",
-]
-
-[[package]]
-name = "dk-autograd"
-version = "0.1.0"
-dependencies = [
- "dk-cuda-ffi",
- "dk-tensor",
- "rand 0.8.8",
-]
-
-[[package]]
-name = "dk-cuda-ffi"
-version = "0.1.0"
-dependencies = [
- "cxx",
- "cxx-build",
-]
-
-[[package]]
-name = "dk-tensor"
-version = "0.1.0"
-dependencies = [
- "cudarc",
- "half",
- "multiversion",
- "rand 0.8.8",
- "wide 1.7.1",
 ]
 
 [[package]]
@@ -883,16 +870,28 @@ dependencies = [
 name = "inferno-rs"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "candle-core",
  "candle-nn",
- "dk-autograd",
- "dk-cuda-ffi",
- "dk-tensor",
- "pudding",
- "pandorapurple",
+ "cudarc",
+ "cxx",
+ "cxx-build",
+ "half",
+ "multiversion",
+ "ndarray",
+ "rand 0.8.8",
+ "rand_chacha 0.3.1",
+ "rand_distr 0.4.3",
+ "rayon",
+ "safetensors",
  "serde",
  "serde_json",
+ "serde_yaml",
+ "sobol_burley",
+ "statrs",
+ "thiserror 2.0.21",
  "tracing",
+ "wide 1.7.1",
 ]
 
 [[package]]
@@ -1108,9 +1107,9 @@ dependencies = [
 
 [[package]]
 name = "nix"
-version = "0.31.3"
+version = "0.32.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf20d2fde8ff38632c426f1165ed7436270b44f199fc55284c38276f9db47c3d"
+checksum = "77730ed34f01f4990cb2ea67fec715ecebc6fab9a6396cf83c5529b13f581bdc"
 dependencies = [
  "bitflags",
  "cfg-if",
@@ -1184,30 +1183,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
 
 [[package]]
-name = "pandorapurple"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "candle-core",
- "candle-nn",
- "dk-tensor",
- "ndarray",
- "rand 0.8.8",
- "rand_chacha 0.3.1",
- "rand_distr 0.4.3",
- "rayon",
- "safetensors",
- "serde",
- "serde_json",
- "serde_yaml",
- "sobol_burley",
- "statrs",
- "thiserror 2.0.21",
- "tracing",
- "wide 1.7.1",
-]
-
-[[package]]
 name = "parking_lot"
 version = "0.12.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1265,10 +1240,6 @@ checksum = "985e7ec9bb745e6ce6535b544d84d6cd6f7ad8bd711c398938ae983b91a766d9"
 dependencies = [
  "unicode-ident",
 ]
-
-[[package]]
-name = "pudding"
-version = "0.2.0-rc.1"
 
 [[package]]
 name = "pulp"
@@ -2166,11 +2137,32 @@ dependencies = [
 ]
 
 [[package]]
-name = "zip"
-version = "9.4.1"
+name = "zeroize"
+version = "1.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23f17fbc870bfac28c6228aed7d6e6df352e26bf7015c4313727e16a7a01ce5e"
+checksum = "85ccff8a4805aba1eaa4cd4afcd49f7557dd2cf5fd79ffc37f8959466effc5aa"
 dependencies = [
+ "zeroize_derive",
+]
+
+[[package]]
+name = "zeroize_derive"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c50655cbb0fe3fc43170059e702f1ce5e19b84cec58dc87b037a09935c2f328"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
+]
+
+[[package]]
+name = "zip"
+version = "9.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a9534624d547e3f516ecde0ed9a70d37788f01d340efcfdd03bf3ea8e163c1d0"
+dependencies = [
+ "constant_time_eq",
  "crc32fast",
  "getrandom 0.4.3",
  "indexmap",
@@ -2179,6 +2171,7 @@ dependencies = [
  "nix",
  "typed-path",
  "windows-sys",
+ "zeroize",
 ]
 
 [[package]]

@@ -13,7 +13,7 @@
   "kernels/mmd.rs",
   "kernels/mod.rs",
   "kernels/sinkhorn.rs",
-  "lib.rs",
+  "mod.rs",
   "likelihoods/mod.rs",
   "likelihoods/multitask_gaussian.rs",
   "linalg.rs",

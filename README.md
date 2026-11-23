@@ -12,25 +12,17 @@ copyrights and licenses.
 
 ## Install
 
-Keep the two SDK checkouts beside each other:
-
-```text
-workspace/
-  pandora-open-core/inferno
-  pandora-open-core/pudding
-```
-
-Add Inferno to your application:
+Add Inferno to your application after the first release is published:
 
 ```toml
 [dependencies]
-inferno = { package = "inferno-rs", path = "../inferno-open-source" }
+inferno = { package = "inferno-rs", version = "0.1.0" }
 ```
 
-Use Rust 1.95 or newer and a C/C++ toolchain. Pudding resolves from the sibling
-checkout. Candle and the tensor backends are vendored; consumers need no Cargo
-patch table. Registry publication is disabled. This source distribution requires
-both checkouts; it is not yet a standalone Git dependency.
+For local development, replace `version` with `path = "/path/to/inferno-for-crates-io"`.
+Use Rust 1.95 or newer and a C/C++ toolchain. Tensor, autograd, curated model and
+Pudding runtime sources are modules of this crate. Candle comes from crates.io;
+no sibling checkouts or Cargo patch tables are required.
 
 ## Build a neural model
 
@@ -94,7 +86,7 @@ checks.check("finite input", Check::Finite(&observation));
 assert!(checks.finish().passed());
 ```
 
-Pudding is imported directly and re-exported as `inferno::pudding`.
+Pudding is included as the `inferno::pudding` module.
 `diagnostics::check_operator` compares a small operator's multiplication against
 its dense representation; `check_solution` observes a linear-solve residual.
 Snapshots copy values to CPU/f64 and detach from autograd. These diagnostics
@@ -139,7 +131,29 @@ cargo doc -p inferno-rs --no-deps --locked
 ```
 
 The external consumer check builds a separate application and exercises the
-Candle API and Pudding integration. Vendored Candle licensing and source changes
-are documented in [its provenance](vendor/candle/PROVENANCE.md).
+Candle API and Pudding integration using registry dependencies. Run
+`cargo package --allow-dirty` to verify the standalone release archive.
+
+For custom convolution layers, use `inferno::convolution::{conv1d_diff, conv2d_diff}`
+to get the view-safe differentiable paths. See [architecture](docs/ARCHITECTURE.md)
+for the registry Candle compatibility details.
+
+## Lean proofs
+
+The newer MPL-2.0 Pudding open-core sources and formal development are included
+in this crate. Runtime checks are available through `inferno::pudding`; formal
+sources, toolchain pins, mathlib lockfile and audit scripts live in
+[`proofs/`](proofs/README.md). Lean and mathlib are external proof-checking tools
+and are not needed to build or use the Rust library. With the pinned Lean
+version installed, run `sh proofs/scripts/check-lean.sh`.
+
+Runtime reports are numerical observations, not formal certificates of Rust
+execution. See [Pudding provenance](src/pudding/PROVENANCE.md) for lineage and
+[third-party notices](docs/THIRD_PARTY.md) for retained licenses.
+
+GPU support is optional: `cuda` enables tensor and Candle CUDA support;
+`torch-kernels` exposes the native bridge API with CPU stubs; and
+`torch-kernels-cuda` builds the C++ bridge against CUDA and cuDNN. GPU builds
+require their native toolchains and libraries.
 
 See [contributing](CONTRIBUTING.md) and [security reporting](SECURITY.md).

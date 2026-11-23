@@ -4,14 +4,17 @@
 //! algebra use [`candle`] tensors. Root [`Tensor`], [`DType`] and [`Device`]
 //! retain the dk-tensor backend used by the small [`gp::ExactGp`] reference.
 //! These backends have distinct tensor types and gradient behavior.
+pub mod convolution;
 pub mod covariance;
+pub mod cuda;
 pub mod gp;
 pub mod likelihood;
 pub mod operators;
 pub mod quadrature;
+pub mod tensor;
+pub use crate::tensor::{DType, Device, Tensor};
 #[cfg(feature = "torch-kernels")]
-pub use dk_cuda_ffi as torch_kernels;
-pub use dk_tensor::{DType, Device, Tensor};
+pub use cuda as torch_kernels;
 pub type Result<T> = std::result::Result<T, Error>;
 #[derive(Debug)]
 pub struct Error(pub String);
@@ -21,8 +24,8 @@ impl std::fmt::Display for Error {
     }
 }
 impl std::error::Error for Error {}
-impl From<dk_tensor::Error> for Error {
-    fn from(e: dk_tensor::Error) -> Self {
+impl From<crate::tensor::Error> for Error {
+    fn from(e: crate::tensor::Error) -> Self {
         Self(e.to_string())
     }
 }
@@ -63,11 +66,13 @@ pub mod utils;
 /// Candle neural-network layers, optimisers and parameter stores.
 pub use candle_nn as nn;
 /// Generalised autograd engine over the same dk-tensor type as the root API.
-pub use dk_autograd as autograd;
-pub use dk_autograd::Variable;
+pub mod autograd;
+pub use crate::autograd::Variable;
 /// Curated source-native VAE and legacy multitask GP components.
-pub use pandorapurple;
-pub use pandorapurple::{flows, model, stochastics};
+#[path = "pandora/mod.rs"]
+pub mod pandora;
+pub use crate::pandora::{flows, model, stochastics};
+pub use pandora as pandorapurple;
 
 pub mod cache;
 pub mod developer;
@@ -89,7 +94,7 @@ pub mod prelude {
     pub use crate::notebook::{GaussianProcess, Model};
 }
 
-/// Runtime consistency checks and finite-support transport tools.
-pub use pudding;
 /// Candle tensor and operator diagnostics backed by Pudding.
 pub mod diagnostics;
+/// Runtime consistency checks and finite-support transport tools.
+pub mod pudding;

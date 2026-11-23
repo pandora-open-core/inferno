@@ -9,3 +9,7 @@
 # Local Pandora journal and build/download caches.
 /notebook/.history/
 /notebook/.cache/
+
+# Lean dependencies and generated artifacts.
+/proofs/lean/.lake/
+**/__pycache__/

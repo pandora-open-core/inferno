@@ -229,4 +229,4 @@ fn lse<Dm: Dim + Copy>(t: &Tensor, axis: Dm) -> CResult<Tensor> {
 }
 
 /// Graph-preserving weighted coupling used by the GMM bridge and latent drift.
-pub use pandorapurple::kernels::sinkhorn::sinkhorn_coupling_t;
+pub use crate::pandora::kernels::sinkhorn::sinkhorn_coupling_t;
