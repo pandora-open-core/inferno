@@ -1,3 +1,7 @@
+[![Crates.io](https://img.shields.io/crates/v/inferno-rs.svg)](https://crates.io/crates/inferno-rs)
+[![Docs.rs](https://img.shields.io/docsrs/inferno-rs)](https://docs.rs/inferno-rs)
+[![Downloads](https://img.shields.io/crates/dv/inferno-rs.svg)](https://crates.io/crates/inferno-rs)
+
 # Inferno
 
 Inferno is an **alpha, open-source Rust SDK** for tensors, automatic
